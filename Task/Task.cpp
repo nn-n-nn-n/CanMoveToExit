@@ -58,7 +58,7 @@ bool ValidationMaze(Coordinates player, char** maze)
 			return true;
 		if (maze[p.x][p.y] != '?') // если ему не присвоено значение заливки
 			maze[p.x][p.y] = '?'; // заливаем
-
+		
 		if (maze[p.x + 1][p.y] != '?' && maze[p.x + 1][p.y] != '#') // проверяем пиксел справа от текущего
 			Push(Coordinates{ p.x + 1, p.y }); // если он не закрашен и не является границей, то помещаем его координаты в стек
 		if (maze[p.x - 1][p.y] != '?' && maze[p.x - 1][p.y] != '#') // то же для левого
@@ -71,6 +71,18 @@ bool ValidationMaze(Coordinates player, char** maze)
 	return false;
 }
 
+void ClearStack()
+{
+	auto temp = stack; // вспомогательный указатель, который будет указывать на удаляемый элемент
+	// в то время, как firstItem мы будем продвигать вперед на следующие элемент
+	while (stack != nullptr) // пока не достигли конца списка
+	{
+		stack = stack->next; // передвигаем "курсор" на следующий элемент
+		delete temp;    // удаляем текущий
+		temp = stack; // обновляем temp, так чтобы он указывал на следующий
+	} // в конце цикла firstItem будет равен nullptr
+}
+
 bool CanMoveToExit(char** maze)
 {
 	int sizeX = 15, sizeY = 15;
@@ -79,7 +91,9 @@ bool CanMoveToExit(char** maze)
 		for (int j = 0; j < sizeY; j++)
 			if (maze[i][j] == 'P')
 				player = { i,j };
-	return ValidationMaze(player, maze);
+	bool res = ValidationMaze(player, maze);
+	ClearStack;
+	return res;
 }
 
 /*
