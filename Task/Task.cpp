@@ -48,21 +48,18 @@ Coordinates Pop()
 	return result; // возвращаем результат
 }
 
-Coordinates FindPlayer(char** maze,int sizeX,int sizeY)
-{
-	Coordinates p = { -1,-1 };
-	for(int i = 0; i<sizeX,i++)
-
-	return p;
-}
-
 bool ValidationMaze(Coordinates player, char** maze)
 {
-	Coordinates p = Pop();  // извлекаем пиксел из стека
-	while (!IsEmpty || maze[p.x][p.y] != 'E') // пока стек не пуст
+	Push(player); // помещаем координаты затравочного пикселя в стек
+	while (!IsEmpty()) // пока стек не пуст
 	{
-		maze[p.x][p.y] = '?'; // заливаем
-		if (maze[p.x + 1][p.y] != '?' && maze[p.x + 1][p.y] != '#') // проверяем пиксед справа от текущего
+		Coordinates p = Pop();  // извлекаем пиксел из стека
+		if (maze[p.x][p.y] == 'E')
+			return true;
+		if (maze[p.x][p.y] != '?') // если ему не присвоено значение заливки
+			maze[p.x][p.y] = '?'; // заливаем
+
+		if (maze[p.x + 1][p.y] != '?' && maze[p.x + 1][p.y] != '#') // проверяем пиксел справа от текущего
 			Push(Coordinates{ p.x + 1, p.y }); // если он не закрашен и не является границей, то помещаем его координаты в стек
 		if (maze[p.x - 1][p.y] != '?' && maze[p.x - 1][p.y] != '#') // то же для левого
 			Push(Coordinates{ p.x - 1, p.y });
@@ -71,16 +68,17 @@ bool ValidationMaze(Coordinates player, char** maze)
 		if (maze[p.x][p.y + 1] != '?' && maze[p.x][p.y + 1] != '#') // то же для нижнего
 			Push(Coordinates{ p.x, p.y + 1 });
 	}
-	if (maze[p.x][p.y] == 'E')
-		return 1;
-	return 0;
+	return false;
 }
 
 bool CanMoveToExit(char** maze)
 {
-	int sizeX, sizeY = 15;
+	int sizeX = 15, sizeY = 15;
 	Coordinates player;
-	player = FindPlayer(maze,sizeX,sizeY);
+	for (int i = 0; i < sizeX; i++)
+		for (int j = 0; j < sizeY; j++)
+			if (maze[i][j] == 'P')
+				player = { i,j };
 	return ValidationMaze(player, maze);
 }
 
