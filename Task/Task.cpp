@@ -51,7 +51,7 @@ Coordinates Pop()
 Coordinates FindPlayer(char** maze)
 {
 	Coordinates p = Pop();  // извлекаем пиксел из стека
-	while (maze[p.x][p.y] != 'P') // пока стек не пуст
+	while (maze[p.x][p.y] != 'P')
 	{
 		maze[p.x][p.y] = '?'; // заливаем
 		if (maze[p.x + 1][p.y] != '?') // проверяем пиксед справа от текущего
@@ -66,11 +66,32 @@ Coordinates FindPlayer(char** maze)
 	return p;
 }
 
+bool ValidationMaze(Coordinates player, char** maze)
+{
+	Coordinates p = Pop();  // извлекаем пиксел из стека
+	while (!IsEmpty || maze[p.x][p.y] != 'E') // пока стек не пуст
+	{
+		maze[p.x][p.y] = '?'; // заливаем
+		if (maze[p.x + 1][p.y] != '?' && maze[p.x + 1][p.y] != '#') // проверяем пиксед справа от текущего
+			Push(Coordinates{ p.x + 1, p.y }); // если он не закрашен и не является границей, то помещаем его координаты в стек
+		if (maze[p.x - 1][p.y] != '?' && maze[p.x - 1][p.y] != '#') // то же для левого
+			Push(Coordinates{ p.x - 1, p.y });
+		if (maze[p.x][p.y - 1] != '?' && maze[p.x][p.y - 1] != '#') // то же для верхнего
+			Push(Coordinates{ p.x, p.y - 1 });
+		if (maze[p.x][p.y + 1] != '?' && maze[p.x][p.y + 1] != '#') // то же для нижнего
+			Push(Coordinates{ p.x, p.y + 1 });
+	}
+	if (maze[p.x][p.y] == 'E')
+		return 1;
+	return 0;
+}
+
 bool CanMoveToExit(char** maze)
 {
+	auto CopyMaze = maze;
 	Coordinates player;
-	player = FindPlayer(maze);
-	return false;
+	player = FindPlayer(CopyMaze);
+	return ValidationMaze(player, maze);
 }
 
 /*
