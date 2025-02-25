@@ -48,21 +48,11 @@ Coordinates Pop()
 	return result; // возвращаем результат
 }
 
-Coordinates FindPlayer(char** maze)
+Coordinates FindPlayer(char** maze,int sizeX,int sizeY)
 {
-	Coordinates p = Pop();  // извлекаем пиксел из стека
-	while (maze[p.x][p.y] != 'P')
-	{
-		maze[p.x][p.y] = '?'; // заливаем
-		if (maze[p.x + 1][p.y] != '?') // проверяем пиксед справа от текущего
-			Push(Coordinates{ p.x + 1, p.y }); // если он не закрашен и не является границей, то помещаем его координаты в стек
-		if (maze[p.x - 1][p.y] != '?') // то же для левого
-			Push(Coordinates{ p.x - 1, p.y });
-		if (maze[p.x][p.y - 1] != '?') // то же для верхнего
-			Push(Coordinates{ p.x, p.y - 1 });
-		if (maze[p.x][p.y + 1] != '?') // то же для нижнего
-			Push(Coordinates{ p.x, p.y + 1 });
-	}
+	Coordinates p = { -1,-1 };
+	for(int i = 0; i<sizeX,i++)
+
 	return p;
 }
 
@@ -88,9 +78,9 @@ bool ValidationMaze(Coordinates player, char** maze)
 
 bool CanMoveToExit(char** maze)
 {
-	auto CopyMaze = maze;
+	int sizeX, sizeY = 15;
 	Coordinates player;
-	player = FindPlayer(CopyMaze);
+	player = FindPlayer(maze,sizeX,sizeY);
 	return ValidationMaze(player, maze);
 }
 
