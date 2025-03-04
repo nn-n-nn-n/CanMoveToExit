@@ -48,7 +48,7 @@ Coordinates Pop()
 	return result; // возвращаем результат
 }
 
-bool ValidationMaze(Coordinates player, char** maze)
+bool ValidationMaze(Coordinates player, char maze[15][15])
 {
 	Push(player); // помещаем координаты затравочного пикселя в стек
 	while (!IsEmpty()) // пока стек не пуст
@@ -83,14 +83,16 @@ void ClearStack()
 	} // в конце цикла firstItem будет равен nullptr
 }
 
-bool CanMoveToExit(char** maze)
+bool CanMoveToExit(char maze[15][15])
 {
 	int sizeX = 15, sizeY = 15;
-	Coordinates player;
+	Coordinates player = {-1,-1};
 	for (int i = 0; i < sizeX; i++)
 		for (int j = 0; j < sizeY; j++)
 			if (maze[i][j] == 'P')
 				player = { i,j };
+	if (player.x == -1)
+		return 0;
 	bool res = ValidationMaze(player, maze);
 	ClearStack;
 	return res;
